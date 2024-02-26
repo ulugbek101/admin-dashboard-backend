@@ -12,7 +12,7 @@ class User(AbstractUser):
     profile_picture = models.ImageField(upload_to='thedevu101-admin-media/profile-pictures/',
                                         null=True,
                                         blank=True,
-                                        default='profile-pictures/user-default.png')
+                                        default='thedevu101-admin-media/user-default.png')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     id = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, unique=True)

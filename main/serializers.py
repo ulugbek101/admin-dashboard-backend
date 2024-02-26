@@ -1,14 +1,21 @@
 from rest_framework import serializers
-from rest_framework.fields import SerializerMethodField
 
-from .models import Subject, Group, Expense
-from users.serializers import TeacherSerializer
+from .models import Subject, Group, Expense, Pupil
 
 
 class SubjectSerializer(serializers.ModelSerializer):
+    groups_count = serializers.SerializerMethodField()
+    pupils_count = serializers.SerializerMethodField()
+
     class Meta:
         fields = '__all__'
         model = Subject
+
+    def get_groups_count(self, subject):
+        return subject.group_set.count()
+
+    def get_pupils_count(self, subject):
+        return Pupil.objects.filter(group__subject=subject).count()
 
 
 class GroupSerializer(serializers.ModelSerializer):
