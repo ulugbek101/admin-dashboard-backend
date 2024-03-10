@@ -66,10 +66,10 @@ class Pupil(models.Model):
     #     parsed_number = phonenumbers.parse(f"{self.phone_number.country_code}{self.phone_number.national_number}", "UZ")
     #     formatted_number = phonenumbers.format_number(parsed_number, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
     #     return formatted_number
-        
 
     def __str__(self) -> str:
         return f'{self.first_name} {self.last_name}'
+
 
 class Expense(models.Model):
     owner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)

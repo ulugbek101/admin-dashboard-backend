@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from .models import Subject, Group, Expense, Pupil
+from users.serializers import TeacherSerializer
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -19,8 +20,9 @@ class SubjectSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    # teacher = TeacherSerializer(read_only=True)
-    # subject = SubjectSerializer(read_only=True)
+    teacher = serializers.SerializerMethodField()
+    subject = serializers.SerializerMethodField()
+    pupils_count = serializers.SerializerMethodField()
 
     class Meta:
         fields = '__all__'
@@ -31,6 +33,19 @@ class GroupSerializer(serializers.ModelSerializer):
             }
         }
 
+    def get_subject(self, object):
+        subject = object.subject
+        serializer = SubjectSerializer(subject)
+        return serializer.data.get('name')
+
+    def get_teacher(self, object):
+        teacher = object.teacher
+        serializer = TeacherSerializer(teacher)
+        return f"{serializer.data.get('first_name')} {serializer.data.get('last_name')}"
+
+    def get_pupils_count(self, object):
+        pupils_count = object.pupil_set.count()
+        return pupils_count
 
 class ExpenseSerializer(serializers.ModelSerializer):
     class Meta:

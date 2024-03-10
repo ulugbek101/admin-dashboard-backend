@@ -1,4 +1,5 @@
 import uuid
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -6,7 +7,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
-    username = models.CharField(max_length=200)
+    username = models.CharField(max_length=200, null=True, blank=True)
     email = models.EmailField(max_length=200, unique=True)
     job = models.CharField(max_length=200, default="O'qituvchi", blank=True, null=True)
     profile_picture = models.ImageField(upload_to='thedevu101-admin-media/profile-pictures/',
