@@ -6,8 +6,11 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     first_name = models.CharField(max_length=200)
     last_name = models.CharField(max_length=200)
-    username = models.CharField(max_length=200)
+    username = models.CharField(max_length=200, null=True, blank=True, unique=True)
     email = models.EmailField(max_length=200, unique=True)
+    is_active = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     job = models.CharField(max_length=200, default="O'qituvchi", blank=True, null=True)
     profile_picture = models.ImageField(upload_to='thedevu101-admin-media/profile-pictures/',
                                         null=True,

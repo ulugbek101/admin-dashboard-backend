@@ -54,11 +54,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
 
         # Add custom claims
+        token['id'] = f'{user.id}'
         token['username'] = user.username
         token['first_name'] = user.first_name
         token['last_name'] = user.last_name
         token['email'] = user.email
-        token['status'] = 'Superadmin' if user.is_superuser else 'Xodim'
+        token['status'] = 'Superadmin' if user.is_superuser else "O'qituvchi"
         token['profile_image'] = user.profile_picture.url
 
         return token
