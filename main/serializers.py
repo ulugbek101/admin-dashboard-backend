@@ -1,7 +1,10 @@
 from rest_framework import serializers
+from django.contrib.auth import get_user_model
 
 from .models import Subject, Group, Expense, Pupil
+from users.serializers import TeacherSerializer
 
+Teacher = get_user_model()
 
 class SubjectSerializer(serializers.ModelSerializer):
     groups_count = serializers.SerializerMethodField()
@@ -19,8 +22,8 @@ class SubjectSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
-    # teacher = TeacherSerializer(read_only=True)
-    # subject = SubjectSerializer(read_only=True)
+    teacher = serializers.PrimaryKeyRelatedField(queryset=Teacher.objects.all(), write_only=True)
+    subject = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all(), write_only=True)
 
     class Meta:
         fields = '__all__'
@@ -30,7 +33,22 @@ class GroupSerializer(serializers.ModelSerializer):
                 'style': {'input_type': 'number'}
             }
         }
+    
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        teacher = instance.teacher
+        subject = instance.subject
 
+        representation['teacher'] = f'{teacher.first_name} {teacher.last_name}'
+        representation['subject'] = subject.name
+        representation['pupils'] = instance.pupil_set.count()
+        return representation
+
+    def create(self, validated_data):
+        teacher = validated_data.pop('teacher')
+        subject = validated_data.pop('subject')
+        group = Group.objects.create(teacher=teacher, subject=subject, **validated_data)
+        return group
 
 class ExpenseSerializer(serializers.ModelSerializer):
     class Meta:
