@@ -28,11 +28,19 @@ class Migration(migrations.Migration):
                 ('is_staff', models.BooleanField(default=False, help_text='Designates whether the user can log into this admin site.', verbose_name='staff status')),
                 ('is_active', models.BooleanField(default=True, help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.', verbose_name='active')),
                 ('date_joined', models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined')),
+<<<<<<< HEAD:app_users/migrations/0001_initial.py
                 ('first_name', models.CharField(max_length=200, verbose_name='Ism')),
                 ('last_name', models.CharField(max_length=200, verbose_name='Familiya')),
                 ('email', models.EmailField(max_length=200, unique=True, verbose_name='E-mail manzil')),
                 ('job', models.CharField(blank=True, default="O'qituvchi", max_length=200, null=True)),
                 ('profile_picture', models.ImageField(blank=True, default='profile-pictures/user-default.png', null=True, upload_to='thedevu101-admin-media/profile-pictures/', verbose_name='Profil rasmi')),
+=======
+                ('first_name', models.CharField(max_length=200)),
+                ('last_name', models.CharField(max_length=200)),
+                ('email', models.EmailField(max_length=200, unique=True)),
+                ('job', models.CharField(blank=True, default="O'qituvchi", max_length=200, null=True)),
+                ('profile_picture', models.ImageField(blank=True, default='thedevu101-admin-media/user-default.png', null=True, upload_to='thedevu101-admin-media/profile-pictures/')),
+>>>>>>> 4e8c4a308953c6e563099953722c12725b4759f8:users/migrations/0001_initial.py
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False, unique=True)),
@@ -42,9 +50,6 @@ class Migration(migrations.Migration):
             options={
                 'unique_together': {('first_name', 'last_name')},
             },
-            managers=[
-                ('objects', django.contrib.auth.models.UserManager()),
-            ],
         ),
         migrations.CreateModel(
             name='SMSSentCount',
