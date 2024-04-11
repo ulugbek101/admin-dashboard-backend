@@ -1,2 +1,4 @@
-# admin-dashboard-backend
-API for existing Admin Dashboard project written fully in Django
+# Backend for "My Admin"
+___
+
+- User authentication via JWT web tokens

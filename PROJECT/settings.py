@@ -1,34 +1,40 @@
 from datetime import timedelta
-
 from pathlib import Path
-from django.urls import reverse_lazy
 from environs import Env
 
 env = Env()
 env.read_env()
-
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 SECRET_KEY = env.str('SECRET_KEY')
-CORS_ORIGIN_ALLOW_ALL = True
 DEBUG = True
 ALLOWED_HOSTS = []
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'Asia/Tashkent'
+USE_I18N = True
+USE_TZ = True
+STATIC_URL = 'static/'
+MEDIA_URL = 'my-admin-media/'
 
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': env.str('PGDATABASE'),
+        'USER': env.str('PGUSER'),
+        'PASSWORD': env.str('PGPASSWORD'),
+        'PORT': env.str('PGPORT'),
+        'HOST': env.str('PGHOST'),
+    }
+}
 
-    # 3rd party apps
-    'rest_framework',
-    'rest_framework_simplejwt',
+AUTH_USER_MODEL = 'core.User'
 
-    # custom apps
-    'app_users',
-    'app_main',
-]
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env.str('CLOUD_NAME'),
+    'API_KEY': env.str('API_KEY'),
+    'API_SECRET': env.str('API_SECRET'),
+}
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -67,10 +73,7 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_EXP_CLAIM": "refresh_exp",
     "SLIDING_TOKEN_LIFETIME": timedelta(days=1),
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=15),
-
-    # "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainPairSerializer",
-    "TOKEN_OBTAIN_SERIALIZER": "app_users.serializers.MyTokenObtainPairSerializer",
-
+    "TOKEN_OBTAIN_SERIALIZER": "core.serializers.MyTokenObtainPairSerializer",
     "TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSerializer",
     "TOKEN_VERIFY_SERIALIZER": "rest_framework_simplejwt.serializers.TokenVerifySerializer",
     "TOKEN_BLACKLIST_SERIALIZER": "rest_framework_simplejwt.serializers.TokenBlacklistSerializer",
@@ -78,13 +81,23 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
+INSTALLED_APPS = [
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'core.apps.CoreConfig',
+    'cloudinary_storage',
+
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-
-    # corsheaders
-    'corsheaders.middleware.CorsMiddleware',
-
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -92,7 +105,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'MY_ADMIN.urls'
+ROOT_URLCONF = 'PROJECT.urls'
 
 TEMPLATES = [
     {
@@ -110,26 +123,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'MY_ADMIN.wsgi.application'
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': env.str('DB_NAME'),
-#         'HOST': env.str('DB_HOST'),
-#         'PORT': env.str('DB_PORT'),
-#         'USER': env.str('DB_USER'),
-#         'PASSWORD': env.str('DB_PASSWORD'),
-#     }
-# }
-
+WSGI_APPLICATION = 'PROJECT.wsgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -146,30 +140,4 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = 'uz'
-TIME_ZONE = 'Asia/Tashkent'
-USE_I18N = True
-USE_TZ = True
-
-STATIC_URL = 'static/'
-MEDIA_URL = 'shams-media/'
-
-# STATICFILES_DIRS = [
-#     BASE_DIR / 'static'
-# ]
-
-STATIC_ROOT = BASE_DIR / 'static'
-MEDIA_ROOT = BASE_DIR / 'media'
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_USER_MODEL = 'app_users.User'
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': env.str('CLOUD_NAME'),
-    'API_KEY': env.str('API_KEY'),
-    'API_SECRET': env.str('API_SECRET'),
-}
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-LOGIN_URL = reverse_lazy("signin")
-LOGOUT_REDIRECT_URL = reverse_lazy("signin")
