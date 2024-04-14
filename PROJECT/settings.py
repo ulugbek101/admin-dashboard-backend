@@ -8,6 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = True
+CORS_ALLOW_ALL_ORIGINS = True
 ALLOWED_HOSTS = []
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Asia/Tashkent'
@@ -86,6 +87,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'core.apps.CoreConfig',
     'cloudinary_storage',
+    'corsheaders',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -98,6 +100,10 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+
+    # corsheaders
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
