@@ -19,16 +19,20 @@ MEDIA_URL = 'my-admin-media/'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env.str('PGDATABASE'),
-        'USER': env.str('PGUSER'),
-        'PASSWORD': env.str('PGPASSWORD'),
-        'PORT': env.str('PGPORT'),
-        'HOST': env.str('PGHOST'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
 
-AUTH_USER_MODEL = 'core.User'
+
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': env.str('PGDATABASE'),
+    #     'USER': env.str('PGUSER'),
+    #     'PASSWORD': env.str('PGPASSWORD'),
+    #     'PORT': env.str('PGPORT'),
+    #     'HOST': env.str('PGHOST'),
+    # }
+}
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': env.str('CLOUD_NAME'),
@@ -39,7 +43,7 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
 
@@ -97,9 +101,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
+AUTH_USER_MODEL = 'core.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
