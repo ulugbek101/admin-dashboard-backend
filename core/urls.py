@@ -1,8 +1,7 @@
-from django.urls import path
 from rest_framework.routers import DefaultRouter
-from . import views
+from .views import TeacherViewSet
 
 router = DefaultRouter()
-router.register(prefix='users', viewset=views.UserViewSet, basename='users')
+router.register(prefix='teachers', viewset=TeacherViewSet, basename='users')
 
 urlpatterns = router.urls
