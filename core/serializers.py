@@ -1,5 +1,5 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework.serializers import ModelSerializer, CharField
+from rest_framework.serializers import ModelSerializer, CharField, Field
 from django.contrib.auth import get_user_model
 
 from .models import Teacher, SuperAdmin, Admin, Student
@@ -53,18 +53,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class UserSerializer(ModelSerializer):
+    password = CharField(write_only=True, required=False,
+                         style={'input_type': 'password'})
+
     class Meta:
         model = User
         exclude = ['date_joined', 'last_login',
-                   'is_staff', 'groups', 'user_permissions', 'is_superuser', 'is_admin', 'is_teacher', 'is_student', 'status', 'is_active', 'username']
-        extra_kwargs = {
-            'password': {
-                'write_only': True,
-                'style': {
-                    'input_type': 'password',
-                }
-            }
-        }
+                   'is_staff', 'groups', 'user_permissions', 'is_superuser', 'is_admin', 'is_teacher', 'is_student', 'is_active', 'username']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -73,22 +68,6 @@ class UserSerializer(ModelSerializer):
         representation['created'] = instance.date_joined
         representation['updated'] = instance.last_login
         return representation
-
-
-class TeacherSerializer(ModelSerializer):
-    password = CharField(write_only=True, required=False)
-
-    class Meta:
-        model = Teacher
-        fields = ['id', 'first_name', 'last_name', 'email', 'profile_image', 'password']
-    
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation['username'] = instance.username
-        representation['status'] = instance.status
-        return representation
-
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -118,6 +97,11 @@ class TeacherSerializer(ModelSerializer):
             'email').lower()[:validated_data.get('email').index('@')]
 
         return super().update(instance, validated_data)
+
+
+class TeacherSerializer(UserSerializer):
+    class Meta(UserSerializer.Meta):
+        model = Teacher
 
 
 class AdminSerializer(UserSerializer):
