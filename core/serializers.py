@@ -79,7 +79,7 @@ class UserSerializer(ModelSerializer):
 
         # Set extra fields
         teacher = Teacher.objects.create(
-            **validated_data, is_teacher=True, status=UserStatus.TEACHER, username=username)
+            **validated_data, is_teacher=True, username=username)
 
         # Hash password and save
         teacher.set_password(password)
