@@ -8,6 +8,9 @@ from .models import Teacher
 User = get_user_model()
 
 
-class TeacherViewSet(ModelViewSet):
-    queryset = Teacher.objects.filter(is_active=True)
+class UserViewSet(ModelViewSet):
+    queryset = User.objects.filter(is_active=True).exclude(is_student=True).order_by("last_name", "first_name", "status")
     serializer_class = TeacherSerializer
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)

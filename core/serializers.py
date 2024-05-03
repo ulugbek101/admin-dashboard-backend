@@ -87,7 +87,7 @@ class UserSerializer(ModelSerializer):
         return teacher
 
     def update(self, instance, validated_data):
-
+        print(instance, validated_data)
         # Update password
         if 'password' in validated_data:
             password = validated_data.pop('password')
@@ -96,6 +96,33 @@ class UserSerializer(ModelSerializer):
         # Generate and update username based on email
         instance.username = validated_data.get(
             'email').lower()[:validated_data.get('email').index('@')]
+        
+        # Change status
+        status = validated_data.get("status")
+
+        if status == "admin":
+            instance.is_student = False
+            instance.is_teacher = False
+            instance.is_superuser = False
+            instance.is_admin = True
+
+        if status == "teacher":
+            instance.is_student = False
+            instance.is_teacher = True
+            instance.is_superuser = False
+            instance.is_admin = False
+        
+        if status == "superuser":
+            instance.is_student = False
+            instance.is_teacher = False
+            instance.is_superuser = True
+            instance.is_admin = False
+        
+        if status == "student":
+            instance.is_student = True
+            instance.is_teacher = False
+            instance.is_superuser = False
+            instance.is_admin = False
 
         return super().update(instance, validated_data)
 
