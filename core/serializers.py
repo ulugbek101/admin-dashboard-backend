@@ -1,9 +1,8 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework.serializers import ModelSerializer, CharField, Field
+from rest_framework.serializers import ModelSerializer, CharField
 from django.contrib.auth import get_user_model
 
-from .models import Teacher, SuperAdmin, Admin, Student
-from .models import UserStatus
+from .models import Teacher, SuperAdmin, Admin, Student, Subject
 
 User = get_user_model()
 
@@ -96,7 +95,7 @@ class UserSerializer(ModelSerializer):
         # Generate and update username based on email
         instance.username = validated_data.get(
             'email').lower()[:validated_data.get('email').index('@')]
-        
+
         # Change status
         status = validated_data.get("status")
 
@@ -111,13 +110,13 @@ class UserSerializer(ModelSerializer):
             instance.is_teacher = True
             instance.is_superuser = False
             instance.is_admin = False
-        
+
         if status == "superuser":
             instance.is_student = False
             instance.is_teacher = False
             instance.is_superuser = True
             instance.is_admin = False
-        
+
         if status == "student":
             instance.is_student = True
             instance.is_teacher = False
@@ -145,3 +144,9 @@ class SuperAdminSerializer(UserSerializer):
 class StudentSerializer(UserSerializer):
     class Meta(UserSerializer.Meta):
         model = Student
+
+
+class SubjectSerializer(ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = '__all__'

@@ -1,6 +1,6 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import BaseUserManager
+from django.db import models
 from django.db.models.query import QuerySet
 
 
@@ -187,3 +187,13 @@ class Student(User):
         self.is_student = True
         self.status = UserStatus.STUDENT
         super().save(*args, **kwargs)
+
+
+class Subject(models.Model):
+    """
+    Base model for subject
+    """
+    name = models.CharField(max_length=50)
+
+    def __str__(self) -> str:
+        return self.name
