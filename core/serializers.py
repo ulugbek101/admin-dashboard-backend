@@ -149,4 +149,10 @@ class StudentSerializer(UserSerializer):
 class SubjectSerializer(ModelSerializer):
     class Meta:
         model = Subject
-        fields = '__all__'
+        fields = ['id', 'name']
+
+    def to_representation(self, instance):
+        representaion = super().to_representation(instance)
+        representaion['created'] = instance.created
+        representaion['updated'] = instance.updated
+        return representaion
